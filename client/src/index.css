@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(222.2 84% 4.9%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(222.2 84% 4.9%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(222.2 84% 4.9%);
+  --primary: hsl(186 84% 37%);
+  --primary-foreground: hsl(210 40% 98%);
+  --secondary: hsl(24 95% 53%);
+  --secondary-foreground: hsl(0 0% 9%);
+  --muted: hsl(210 40% 96%);
+  --muted-foreground: hsl(215.4 16.3% 46.9%);
+  --accent: hsl(142 76% 36%);
+  --accent-foreground: hsl(355.7 100% 97.3%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(210 40% 98%);
+  --border: hsl(214.3 31.8% 91.4%);
+  --input: hsl(214.3 31.8% 91.4%);
+  --ring: hsl(186 84% 37%);
+  --chart-1: hsl(186 84% 37%);
+  --chart-2: hsl(24 95% 53%);
+  --chart-3: hsl(142 76% 36%);
+  --chart-4: hsl(43 96% 56%);
+  --chart-5: hsl(340 75% 55%);
+  --sidebar: hsl(180 6.6667% 97.0588%);
+  --sidebar-foreground: hsl(210 25% 7.8431%);
+  --sidebar-primary: hsl(186 84% 37%);
+  --sidebar-primary-foreground: hsl(210 40% 98%);
+  --sidebar-accent: hsl(211.5789 51.3514% 92.7451%);
+  --sidebar-accent-foreground: hsl(186 84% 37%);
+  --sidebar-border: hsl(205.0000 25.0000% 90.5882%);
+  --sidebar-ring: hsl(186 84% 37%);
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.75rem;
+  --shadow-2xs: 0px 2px 0px 0px hsl(186 84% 37% / 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(186 84% 37% / 0.00);
+  --shadow-sm: 0px 2px 0px 0px hsl(186 84% 37% / 0.00), 0px 1px 2px -1px hsl(186 84% 37% / 0.00);
+  --shadow: 0px 2px 0px 0px hsl(186 84% 37% / 0.00), 0px 1px 2px -1px hsl(186 84% 37% / 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(186 84% 37% / 0.00), 0px 2px 4px -1px hsl(186 84% 37% / 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(186 84% 37% / 0.00), 0px 4px 6px -1px hsl(186 84% 37% / 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(186 84% 37% / 0.00), 0px 8px 10px -1px hsl(186 84% 37% / 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(186 84% 37% / 0.00);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  --background: hsl(0 0% 0%);
+  --foreground: hsl(200 6.6667% 91.1765%);
+  --card: hsl(228 9.8039% 10%);
+  --card-foreground: hsl(0 0% 85.0980%);
+  --popover: hsl(0 0% 0%);
+  --popover-foreground: hsl(200 6.6667% 91.1765%);
+  --primary: hsl(186 84% 37%);
+  --primary-foreground: hsl(210 40% 98%);
+  --secondary: hsl(24 95% 53%);
+  --secondary-foreground: hsl(0 0% 9%);
+  --muted: hsl(0 0% 9.4118%);
+  --muted-foreground: hsl(210 3.3898% 46.2745%);
+  --accent: hsl(142 76% 36%);
+  --accent-foreground: hsl(355.7 100% 97.3%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(210 40% 98%);
+  --border: hsl(210 5.2632% 14.9020%);
+  --input: hsl(207.6923 27.6596% 18.4314%);
+  --ring: hsl(186 84% 37%);
+  --chart-1: hsl(186 84% 37%);
+  --chart-2: hsl(24 95% 53%);
+  --chart-3: hsl(142 76% 36%);
+  --chart-4: hsl(43 96% 56%);
+  --chart-5: hsl(340 75% 55%);
+  --sidebar: hsl(228 9.8039% 10%);
+  --sidebar-foreground: hsl(0 0% 85.0980%);
+  --sidebar-primary: hsl(186 84% 37%);
+  --sidebar-primary-foreground: hsl(210 40% 98%);
+  --sidebar-accent: hsl(205.7143 70% 7.8431%);
+  --sidebar-accent-foreground: hsl(186 84% 37%);
+  --sidebar-border: hsl(205.7143 15.7895% 26.0784%);
+  --sidebar-ring: hsl(186 84% 37%);
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, hsl(186 84% 37%) 0%, hsl(24 95% 53%) 100%);
+}
+
+.chart-container {
+  background: linear-gradient(45deg, #f0f9ff 0%, #fef3f2 100%);
+}
+
+.hover-lift {
+  transition: transform 0.2s ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.tab-active {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.progress-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--primary);
+  border-radius: inherit;
+  transition: width 0.5s ease-in-out;
+}
