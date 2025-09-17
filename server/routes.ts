@@ -14,7 +14,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing required Stripe secret: STRIPE_SECRET_KEY');
 }
 
-if (!process.env.STRIPE_PRICE_ID) {
+if (!process.env.STRIPE_PRICE_ID && process.env.NODE_ENV === 'production') {
   throw new Error('Missing required Stripe secret: STRIPE_PRICE_ID');
 }
 
@@ -479,7 +479,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const subscription = await stripe.subscriptions.create({
         customer: customer.id,
         items: [{
-          price: process.env.STRIPE_PRICE_ID,
+          price: process.env.STRIPE_PRICE_ID || 'price_development_testing',
         }],
         payment_behavior: 'default_incomplete',
         expand: ['latest_invoice.payment_intent'],
