@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "wouter";
+import { Heart, Calendar, Stethoscope } from "lucide-react";
 import type { Dog } from "@shared/schema";
 
 interface DogProfileCardProps {
@@ -35,69 +35,68 @@ export default function DogProfileCard({ dog }: DogProfileCardProps) {
     return `${parseFloat(dog.weight)} lbs`;
   };
 
-  // Use a default dog image if no profile image
-  const profileImage = dog.profileImageUrl || 
-    "https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=80&h=80";
-
   return (
-    <Card className="hover-lift cursor-pointer" data-testid={`card-dog-${dog.name}`}>
+    <Card className="hover-lift shadow-lg bg-white dark:bg-gray-800" data-testid={`card-dog-${dog.name}`}>
       <CardContent className="p-6">
-        <div className="flex items-center space-x-4 mb-4">
-          <img 
-            src={profileImage}
-            alt={`${dog.name} profile`}
-            className="w-16 h-16 rounded-full object-cover"
-            onError={(e) => {
-              // Fallback to default image if custom image fails to load
-              (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=80&h=80";
-            }}
-          />
-          <div>
-            <h3 className="font-bold text-foreground" data-testid={`text-dog-name-${dog.name}`}>
+        <div className="flex items-center mb-4">
+          {dog.profileImageUrl ? (
+            <img 
+              src={dog.profileImageUrl}
+              alt={`${dog.name} profile`}
+              className="w-16 h-16 rounded-full object-cover border-2 border-teal-100 dark:border-teal-900"
+              onError={(e) => {
+                // Fallback to heart icon if image fails to load
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+                target.nextElementSibling?.classList.remove('hidden');
+              }}
+            />
+          ) : null}
+          <div className={`w-16 h-16 bg-teal-100 dark:bg-teal-900 rounded-full flex items-center justify-center ${dog.profileImageUrl ? 'hidden' : ''}`}>
+            <Heart className="h-8 w-8 text-teal-600 dark:text-teal-400" />
+          </div>
+          <div className="ml-4">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white" data-testid={`text-dog-name-${dog.name}`}>
               {dog.name}
             </h3>
-            <p className="text-sm text-muted-foreground">
-              {dog.breed} • {getAgeString(dog.birthDate)}
-            </p>
-            <Badge variant="secondary" className="text-xs mt-1">
-              {getHealthStatus()} • Last checkup: Recent
-            </Badge>
+            <p className="text-gray-600 dark:text-gray-300">{dog.breed}</p>
           </div>
         </div>
         
-        <div className="grid grid-cols-3 gap-4 mb-4">
-          <div className="text-center">
-            <p className="text-lg font-bold text-foreground" data-testid={`text-weight-${dog.name}`}>
-              {getWeightDisplay()}
-            </p>
-            <p className="text-xs text-muted-foreground">Weight</p>
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between">
+            <span className="text-gray-500 dark:text-gray-400">Age:</span>
+            <span className="text-gray-900 dark:text-white">{getAgeString(dog.birthDate)}</span>
           </div>
-          <div className="text-center">
-            <p className="text-lg font-bold text-secondary">0</p>
-            <p className="text-xs text-muted-foreground">Meds Due</p>
+          <div className="flex justify-between">
+            <span className="text-gray-500 dark:text-gray-400">Weight:</span>
+            <span className="text-gray-900 dark:text-white" data-testid={`text-weight-${dog.name}`}>{getWeightDisplay()}</span>
           </div>
-          <div className="text-center">
-            <p className="text-lg font-bold text-accent">100%</p>
-            <p className="text-xs text-muted-foreground">Vaccines</p>
+          <div className="flex justify-between">
+            <span className="text-gray-500 dark:text-gray-400">Gender:</span>
+            <span className="text-gray-900 dark:text-white">{dog.gender || 'Not specified'}</span>
           </div>
         </div>
         
-        <div className="flex space-x-2">
-          <Link href={`/health`} className="flex-1">
+        <div className="mt-4 flex space-x-2">
+          <Link href={`/health?dogId=${dog.id}`} className="flex-1">
             <Button 
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-              data-testid={`button-view-health-${dog.name}`}
+              className="flex-1 bg-orange-500 text-white px-3 py-2 rounded text-sm hover:bg-orange-600 w-full"
+              data-testid={`button-log-health-${dog.name}`}
             >
-              View Health
+              <Stethoscope className="h-4 w-4 mr-1" />
+              Log Health
             </Button>
           </Link>
-          <Button 
-            variant="outline" 
-            size="icon"
-            data-testid={`button-edit-${dog.name}`}
-          >
-            <i className="fas fa-edit"></i>
-          </Button>
+          <Link href={`/appointments?dogId=${dog.id}`} className="flex-1">
+            <Button 
+              className="flex-1 bg-blue-500 text-white px-3 py-2 rounded text-sm hover:bg-blue-600 w-full"
+              data-testid={`button-schedule-apt-${dog.name}`}
+            >
+              <Calendar className="h-4 w-4 mr-1" />
+              Schedule Apt
+            </Button>
+          </Link>
         </div>
       </CardContent>
     </Card>
