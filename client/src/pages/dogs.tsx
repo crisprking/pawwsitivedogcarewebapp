@@ -68,7 +68,7 @@ export default function Dogs() {
     mutationFn: async (data: DogFormValues) => {
       const payload = {
         ...data,
-        weight: data.weight ? parseFloat(data.weight) : undefined,
+        weight: data.weight || undefined,
         birthDate: data.birthDate || undefined,
       };
       await apiRequest("POST", "/api/dogs", payload);
