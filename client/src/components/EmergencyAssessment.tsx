@@ -1,7 +1,16 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { AlertTriangle, Brain, Clock, Heart, Zap } from "lucide-react";
+import type { EmergencyAssessment } from "@shared/aiTypes";
 
 const emergencySymptoms = [
   "Difficulty breathing or gasping",
@@ -42,9 +51,32 @@ const routineSymptoms = [
   "General wellness questions"
 ];
 
+// Using shared type from aiTypes.ts
+
 export default function EmergencyAssessment() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [selectedDogId, setSelectedDogId] = useState<string>("");
+  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [duration, setDuration] = useState<string>("");
+  const [severity, setSeverity] = useState<string>("");
+  const [currentBehavior, setCurrentBehavior] = useState<string>("");
+  const [vitalSigns, setVitalSigns] = useState({
+    breathing: "",
+    heartRate: "",
+    temperature: "",
+    gumColor: "",
+  });
+  const [aiAssessment, setAiAssessment] = useState<EmergencyAssessment | null>(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const { toast } = useToast();
+
+  // Get user's dogs
+  const { data: dogs = [] } = useQuery({
+    queryKey: ["/api/dogs"],
+    enabled: isOpen,
+  });
+
   const [assessment, setAssessment] = useState<{
     symptoms: string[];
     urgency: "emergency" | "urgent" | "routine" | null;
@@ -74,12 +106,76 @@ export default function EmergencyAssessment() {
       urgency
     });
     
+    // Also add to selected symptoms for AI analysis
+    setSelectedSymptoms(prev => [...prev, symptom]);
+    
     setCurrentStep(2); // Go to results
+  };
+
+  const performAIAssessment = async () => {
+    if (!selectedDogId || selectedSymptoms.length === 0) {
+      toast({
+        title: "Missing Information",
+        description: "Please select a dog and symptoms before getting AI analysis.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsAnalyzing(true);
+    try {
+      const assessmentData = {
+        symptoms: selectedSymptoms,
+        duration: duration || "Unknown",
+        severity: severity || "Not specified",
+        currentBehavior: currentBehavior || "Not specified",
+        vitalSigns: Object.entries(vitalSigns)
+          .filter(([_, value]) => value)
+          .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
+      };
+
+      const response = await apiRequest("POST", "/api/ai/emergency-assessment", {
+        dogId: selectedDogId,
+        assessmentData,
+      });
+
+      const result = await response.json();
+      setAiAssessment(result.assessment);
+      setCurrentStep(3); // Go to AI results
+      toast({
+        title: "AI Assessment Complete",
+        description: "Emergency assessment has been analyzed by AI.",
+      });
+    } catch (error) {
+      console.error("AI assessment failed:", error);
+      toast({
+        title: "Assessment Failed",
+        description: "Unable to perform AI assessment. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
   };
 
   const resetAssessment = () => {
     setCurrentStep(0);
     setAssessment({ symptoms: [], urgency: null });
+    setSelectedSymptoms([]);
+    setSelectedDogId("");
+    setDuration("");
+    setSeverity("");
+    setCurrentBehavior("");
+    setVitalSigns({ breathing: "", heartRate: "", temperature: "", gumColor: "" });
+    setAiAssessment(null);
+  };
+
+  const toggleSymptom = (symptom: string) => {
+    setSelectedSymptoms(prev => 
+      prev.includes(symptom) 
+        ? prev.filter(s => s !== symptom)
+        : [...prev, symptom]
+    );
   };
 
   const getRecommendation = () => {

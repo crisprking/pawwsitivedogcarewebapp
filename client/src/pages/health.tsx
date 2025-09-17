@@ -149,17 +149,47 @@ export default function Health() {
                                         {new Date(record.recordedAt).toLocaleDateString()}
                                       </span>
                                     </div>
-                                    {record.description && (
-                                      <p className="text-sm text-muted-foreground mb-2">{record.description}</p>
-                                    )}
-                                    {record.severity && (
+                                    <div className="flex items-start justify-between mb-2">
                                       <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
-                                        record.severity === 'severe' ? 'bg-destructive/20 text-destructive' :
-                                        record.severity === 'moderate' ? 'bg-chart-4/20 text-chart-4' :
-                                        'bg-chart-3/20 text-chart-3'
+                                        record.type === 'symptom' ? 'bg-destructive/20 text-destructive' :
+                                        record.type === 'checkup' ? 'bg-chart-3/20 text-chart-3' :
+                                        'bg-primary/20 text-primary'
                                       }`}>
-                                        {record.severity}
+                                        {record.type}
                                       </span>
+                                      {record.severity && (
+                                        <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
+                                          record.severity === 'severe' ? 'bg-destructive/20 text-destructive' :
+                                          record.severity === 'moderate' ? 'bg-chart-4/20 text-chart-4' :
+                                          'bg-chart-3/20 text-chart-3'
+                                        }`}>
+                                          {record.severity}
+                                        </span>
+                                      )}
+                                    </div>
+                                    {record.description && (
+                                      <p className="text-sm text-muted-foreground mb-3">{record.description}</p>
+                                    )}
+                                    {record.photoUrls && record.photoUrls.length > 0 && (
+                                      <div className="mb-3">
+                                        <h5 className="text-sm font-medium text-foreground mb-2">Photos:</h5>
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                          {record.photoUrls.map((photoUrl, photoIndex) => (
+                                            <div key={photoIndex} className="relative group">
+                                              <img
+                                                src={photoUrl}
+                                                alt={`Health record photo ${photoIndex + 1}`}
+                                                className="w-full h-20 object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
+                                                onClick={() => {
+                                                  // Open image in new tab for full view
+                                                  window.open(photoUrl, '_blank');
+                                                }}
+                                                data-testid={`health-photo-${record.id}-${photoIndex}`}
+                                              />
+                                            </div>
+                                          ))}
+                                        </div>
+                                      </div>
                                     )}
                                   </div>
                                 ))}

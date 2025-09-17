@@ -11,6 +11,8 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.17.1",
+    "@google/genai": "^1.20.0",
     "@hookform/resolvers": "^3.10.0",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@neondatabase/serverless": "^0.10.4",
@@ -45,6 +47,7 @@
     "@stripe/stripe-js": "^7.9.0",
     "@tanstack/react-query": "^5.60.5",
     "@types/memoizee": "^0.4.12",
+    "@types/multer": "^2.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -60,6 +63,7 @@
     "lucide-react": "^0.453.0",
     "memoizee": "^0.4.17",
     "memorystore": "^1.6.7",
+    "multer": "^2.0.2",
     "next-themes": "^0.4.6",
     "openid-client": "^6.8.0",
     "passport": "^0.7.0",
