@@ -38,7 +38,7 @@ export function getSession() {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       maxAge: sessionTtl,
     },
   });
@@ -58,6 +58,7 @@ async function upsertUser(
   claims: any,
 ) {
   await storage.upsertUser({
+    id: claims.sub,
     email: claims["email"],
     firstName: claims["first_name"],
     lastName: claims["last_name"],
@@ -77,9 +78,10 @@ export async function setupAuth(app: Express) {
     tokens: client.TokenEndpointResponse & client.TokenEndpointResponseHelpers,
     verified: passport.AuthenticateCallback
   ) => {
-    const user = {};
+    const claims = tokens.claims();
+    const user = { userId: claims?.sub };
     updateUserSession(user, tokens);
-    await upsertUser(tokens.claims());
+    await upsertUser(claims);
     verified(null, user);
   };
 
