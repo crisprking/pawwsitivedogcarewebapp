@@ -429,8 +429,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const formattedRecords = recentRecords.map(record => ({
         type: record.type,
         title: record.title,
-        description: record.description,
-        severity: record.severity,
+        description: record.description || undefined,
+        severity: record.severity || undefined,
         recordedAt: record.recordedAt || new Date(),
       }));
 
