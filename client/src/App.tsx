@@ -4,6 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Landing from "@/pages/landing";
 import Home from "@/pages/home";
 import Dogs from "@/pages/dogs";
@@ -17,8 +19,8 @@ function Router() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-lg">Loading...</div>
+      <div className="flex items-center justify-center h-screen bg-background">
+        <LoadingSpinner size="lg" text="Loading Pawsitive..." />
       </div>
     );
   }
@@ -43,12 +45,14 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

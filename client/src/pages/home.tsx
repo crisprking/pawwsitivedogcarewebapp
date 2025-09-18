@@ -86,92 +86,158 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 md:pb-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <div className="gradient-bg rounded-2xl p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold mb-2" data-testid="text-welcome">
-                  Good morning, {firstName}!
-                </h1>
-                <p className="opacity-90 mb-4" data-testid="text-summary">
+          <div className="gradient-bg rounded-3xl p-8 text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
+            
+            <div className="relative flex items-center justify-between">
+              <div className="flex-1">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mr-4">
+                    <i className="fas fa-sun text-2xl"></i>
+                  </div>
+                  <div>
+                    <h1 className="text-3xl font-bold" data-testid="text-welcome">
+                      Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'}, {firstName}!
+                    </h1>
+                    <p className="opacity-75 text-lg">
+                      {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                    </p>
+                  </div>
+                </div>
+                
+                <p className="opacity-90 mb-6 text-lg" data-testid="text-summary">
                   {hasUpcomingAppointments 
-                    ? `${nextAppointment.dogName} has an appointment coming up.`
+                    ? `${nextAppointment.dogName} has an appointment coming up today.`
                     : dogs.length > 0 
-                      ? `You have ${dogs.length} ${dogs.length === 1 ? 'dog' : 'dogs'} in your care.`
-                      : "Welcome to Pawsitive! Add your first dog to get started."
+                      ? `You're caring for ${dogs.length} wonderful ${dogs.length === 1 ? 'pup' : 'pups'}.`
+                      : "Welcome to Pawsitive! Let's start by adding your first dog."
                   }
                 </p>
-                <Button 
-                  variant="secondary" 
-                  className="bg-white text-primary hover:bg-gray-50"
-                  data-testid="button-view-details"
-                >
-                  {dogs.length === 0 ? "Add Your First Dog" : "View Details"}
-                </Button>
+                
+                <div className="flex flex-wrap gap-3">
+                  <Button 
+                    variant="secondary" 
+                    className="bg-white text-primary hover:bg-gray-50 font-semibold"
+                    data-testid="button-view-details"
+                  >
+                    <i className="fas fa-plus mr-2"></i>
+                    {dogs.length === 0 ? "Add Your First Dog" : "Add New Dog"}
+                  </Button>
+                  {dogs.length > 0 && (
+                    <Button 
+                      variant="ghost" 
+                      className="text-white border-white/30 hover:bg-white/10"
+                    >
+                      <i className="fas fa-stethoscope mr-2"></i>
+                      Quick Health Check
+                    </Button>
+                  )}
+                </div>
               </div>
-              <img 
-                src="https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&h=200" 
-                alt="Happy golden retriever" 
-                className="hidden lg:block w-48 h-32 rounded-xl object-cover" 
-              />
+              
+              <div className="hidden lg:block ml-8">
+                <img 
+                  src="https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200" 
+                  alt="Happy golden retriever" 
+                  className="w-56 h-36 rounded-2xl object-cover shadow-2xl border-4 border-white/20" 
+                />
+              </div>
             </div>
           </div>
         </div>
 
         {/* Quick Actions & Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="hover-lift cursor-pointer" data-testid="card-health-check">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
-                  <i className="fas fa-thermometer-three-quarters text-accent text-xl"></i>
-                </div>
-                <span className="text-sm text-muted-foreground">Emergency</span>
-              </div>
-              <h3 className="font-semibold text-foreground mb-1">Health Check</h3>
-              <p className="text-sm text-muted-foreground">Assess symptoms quickly</p>
-            </CardContent>
-          </Card>
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-foreground">Quick Actions</h2>
+            <Button variant="ghost" size="sm" className="text-muted-foreground">
+              <i className="fas fa-cog mr-2"></i>
+              Customize
+            </Button>
+          </div>
           
-          <Card className="hover-lift cursor-pointer" data-testid="card-medications">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center">
-                  <i className="fas fa-pills text-secondary text-xl"></i>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="hover-lift cursor-pointer border-0 shadow-lg bg-gradient-to-br from-destructive/5 to-destructive/10 group" data-testid="card-health-check">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-14 h-14 bg-destructive rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i className="fas fa-heartbeat text-white text-xl"></i>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-destructive font-semibold bg-destructive/10 px-2 py-1 rounded-full">
+                      Emergency
+                    </div>
+                  </div>
                 </div>
-                <span className="text-sm text-accent font-medium">Due today</span>
-              </div>
-              <h3 className="font-semibold text-foreground mb-1">Medications</h3>
-              <p className="text-sm text-muted-foreground">Track daily doses</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="hover-lift cursor-pointer" data-testid="card-appointments">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-chart-3/10 rounded-xl flex items-center justify-center">
-                  <i className="fas fa-calendar-check text-chart-3 text-xl"></i>
+                <h3 className="font-bold text-foreground mb-2">Health Check</h3>
+                <p className="text-sm text-muted-foreground mb-3">Quick symptom assessment</p>
+                <Button size="sm" className="w-full bg-destructive hover:bg-destructive/90">
+                  Start Assessment
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover-lift cursor-pointer border-0 shadow-lg bg-gradient-to-br from-secondary/5 to-secondary/10 group" data-testid="card-medications">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-14 h-14 bg-secondary rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i className="fas fa-pills text-white text-xl"></i>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-secondary font-semibold bg-secondary/10 px-2 py-1 rounded-full">
+                      2 Due Today
+                    </div>
+                  </div>
                 </div>
-                <span className="text-sm text-chart-4 font-medium">
-                  {hasUpcomingAppointments ? "Next: Soon" : "None"}
-                </span>
-              </div>
-              <h3 className="font-semibold text-foreground mb-1">Appointments</h3>
-              <p className="text-sm text-muted-foreground">Schedule & manage</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="hover-lift cursor-pointer" data-testid="card-weight-track">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-chart-5/10 rounded-xl flex items-center justify-center">
-                  <i className="fas fa-weight text-chart-5 text-xl"></i>
+                <h3 className="font-bold text-foreground mb-2">Medications</h3>
+                <p className="text-sm text-muted-foreground mb-3">Manage daily doses</p>
+                <Button size="sm" variant="outline" className="w-full border-secondary text-secondary hover:bg-secondary hover:text-white">
+                  View Schedule
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover-lift cursor-pointer border-0 shadow-lg bg-gradient-to-br from-chart-3/5 to-chart-3/10 group" data-testid="card-appointments">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-14 h-14 bg-chart-3 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i className="fas fa-calendar-check text-white text-xl"></i>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-chart-3 font-semibold bg-chart-3/10 px-2 py-1 rounded-full">
+                      {hasUpcomingAppointments ? "Upcoming" : "None"}
+                    </div>
+                  </div>
                 </div>
-                <span className="text-sm text-chart-3 font-medium">Healthy</span>
-              </div>
-              <h3 className="font-semibold text-foreground mb-1">Weight Track</h3>
-              <p className="text-sm text-muted-foreground">Monitor trends</p>
-            </CardContent>
-          </Card>
+                <h3 className="font-bold text-foreground mb-2">Appointments</h3>
+                <p className="text-sm text-muted-foreground mb-3">Schedule & manage visits</p>
+                <Button size="sm" variant="outline" className="w-full border-chart-3 text-chart-3 hover:bg-chart-3 hover:text-white">
+                  {hasUpcomingAppointments ? "View Next" : "Schedule Now"}
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="hover-lift cursor-pointer border-0 shadow-lg bg-gradient-to-br from-chart-5/5 to-chart-5/10 group" data-testid="card-weight-track">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-14 h-14 bg-chart-5 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i className="fas fa-chart-line text-white text-xl"></i>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-xs text-chart-5 font-semibold bg-chart-5/10 px-2 py-1 rounded-full">
+                      Trending ↗
+                    </div>
+                  </div>
+                </div>
+                <h3 className="font-bold text-foreground mb-2">Weight Tracking</h3>
+                <p className="text-sm text-muted-foreground mb-3">Monitor health trends</p>
+                <Button size="sm" variant="outline" className="w-full border-chart-5 text-chart-5 hover:bg-chart-5 hover:text-white">
+                  Log Weight
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         {/* Dog Profiles Section */}
