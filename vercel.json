@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npx vite build --outDir client/dist",
-  "outputDirectory": "client/dist",
-  "installCommand": "npm install"
+  "framework": "vite",
+  "buildCommand": "npm run build:client",
+  "outputDirectory": "client/dist"
 }
